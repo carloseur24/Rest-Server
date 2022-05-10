@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require("express");
 const cors = require("cors");
+const {main} = require('../database/configmg');
 
 class Server {
 
@@ -8,11 +9,20 @@ class Server {
         this.app = express()
         this.port = process.env.PORT;
         this.usuariosPath = '/api/users'
+        //connect to db
+        this.mongoDb()
         //MiddleWares
         this.middlewares()
         // Routes
         this.routes()
     }
+    async pgDb() {
+        await test();
+    }
+    async mongoDb() {
+        await main();
+    }
+
     middlewares() {
         //cors
         this.app.use(cors())

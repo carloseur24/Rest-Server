@@ -1,51 +1,88 @@
+const bcryptjs = require('bcryptjs');
 const {
     response,
     request
 } = require('express');
-const Server = require('../models/server');
+const User = require('../models/usermg')
 
-const usersGet = (req = request, res = response) => {
+const usersGet = async (req = request, res = response) => {
     const {
-        q,
-        name = 'Not name',
-        age,
-        page = 1,
-        limit
+        limit = 5, from = 0
     } = req.query;
+    const query = {
+        state: true
+    }
+    // const users = await User.find(query)
+    //     .skip(from)
+    //     .limit(limit);
+    // const total = await User.countDocuments(query);
+
+    const [ total, users ] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query)
+            .skip(from)
+            .limit(limit)
+    ])
+
     res.json({
-        msg: 'get API - controller',
-        q,
-        name,
-        age
+        total,
+        users
     })
+
 }
-const usersPut = (req = request, res = response) => {
+const usersPut = async (req = request, res = response) => {
     const {
-        id,
-        name,
-        age,
-        page,
-        limit
-    } = req.params;
-    res.json({
-        msg: 'put API - controller',
         id
+    } = req.params;
+    const {
+        _id,
+        google,
+        pass,
+        ...all
+    } = req.body;
+
+    //validate vs Db
+    if (pass) {
+        const salt = bcryptjs.genSaltSync();
+        all.pass = bcryptjs.hashSync(pass, salt);
+    }
+    const user = await User.findByIdAndUpdate(id, all);
+
+    res.json({
+        user
     })
 }
-const usersPost = (req, res = response) => {
+const usersPost = async (req, res = response) => {
     const {
         name,
-        age
+        email,
+        pass,
+        rol
     } = req.body;
-    res.json({
-        msg: 'post API - controller',
+    const user = new User({
         name,
-        age
+        email,
+        pass,
+        rol
+    })
+    //encrypt pass
+    const salt = bcryptjs.genSaltSync();
+    user.pass = bcryptjs.hashSync(pass, salt);
+    //record db
+    await user.save();
+
+    res.json({
+        user
     })
 }
-const usersDelete = (req, res = response) => {
+const usersDelete = async (req, res = response) => {
+    const {id} = req.params;
+    // fisic delete
+    // const user = await User.findByIdAndDelete( id );
+    const user = await User.findByIdAndUpdate( id, {state: false} );
+
     res.json({
-        msg: 'delete API - controller'
+        user
     })
 }
 const usersPatch = (req, res = response) => {
