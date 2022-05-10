@@ -80,7 +80,7 @@ const usersDelete = async (req, res = response) => {
     // fisic delete
     // const user = await User.findByIdAndDelete( id );
     const user = await User.findByIdAndUpdate( id, {state: false} );
-
+    //1
     res.json({
         user
     })
