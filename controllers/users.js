@@ -12,17 +12,17 @@ const usersGet = async (req = request, res = response) => {
     const query = {
         state: true
     }
-    // const users = await User.find(query)
-    //     .skip(from)
-    //     .limit(limit);
-    // const total = await User.countDocuments(query);
+    const users = await User.find(query)
+        .skip(from)
+        .limit(limit);
+    const total = await User.countDocuments(query);
 
-    const [ total, users ] = await Promise.all([
-        User.countDocuments(query),
-        User.find(query)
-            .skip(from)
-            .limit(limit)
-    ])
+    // const [ total, users ] = await Promise.all([
+    //     User.countDocuments(query),
+    //     User.find(query)
+    //         .skip(from)
+    //         .limit(limit)
+    // ])
 
     res.json({
         total,
