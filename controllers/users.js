@@ -12,17 +12,17 @@ const usersGet = async (req = request, res = response) => {
     const query = {
         state: true
     }
-    const users = await User.find(query)
-        .skip(from)
-        .limit(limit);
-    const total = await User.countDocuments(query);
+    // const users = await User.find(query)
+    //     .skip(from)
+    //     .limit(limit);
+    // const total = await User.countDocuments(query);
 
-    // const [ total, users ] = await Promise.all([
-    //     User.countDocuments(query),
-    //     User.find(query)
-    //         .skip(from)
-    //         .limit(limit)
-    // ])
+    const [total, users] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query)
+        .skip(from)
+        .limit(limit)
+    ])
 
     res.json({
         total,
@@ -76,11 +76,15 @@ const usersPost = async (req, res = response) => {
     })
 }
 const usersDelete = async (req, res = response) => {
-    const {id} = req.params;
+    const {
+        id
+    } = req.params;
     // fisic delete
     // const user = await User.findByIdAndDelete( id );
-    const user = await User.findByIdAndUpdate( id, {state: false} );
-    //1
+    const user = await User.findByIdAndUpdate(id, {
+        state: false
+    });
+
     res.json({
         user
     })

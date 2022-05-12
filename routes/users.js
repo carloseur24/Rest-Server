@@ -9,9 +9,15 @@ const {
     emailvalidator,
     uservalidator
 } = require('../helpers/dbvalidators')
+
 const {
-    campval
-} = require('../middlewares/validator');
+    campval,
+    validatejwt,
+    isAdmin,
+    haveRole
+} = require('../middlewares')
+
+
 const {
     usersGet,
     usersPut,
@@ -37,12 +43,14 @@ router.post('/', [
     }),
     check('email', 'This value isnt a email').isEmail(),
     check('email').custom(emailvalidator),
-    // check('rol', 'This rol isnt permited').isIn(['ADMIN_ROLE','USER_ROLE']),
     check("rol").custom(rolvalidator),
     campval
 ], usersPost)
 
 router.delete('/:id', [
+    validatejwt,
+    // isAdmin,
+    haveRole('ADMMIN_ROLE', 'SELL_ROLE'),
     check('id', `this isn't a valid ID`).isMongoId(),
     check('id').custom(uservalidator),
     campval

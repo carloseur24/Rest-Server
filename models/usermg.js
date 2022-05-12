@@ -1,3 +1,4 @@
+const { ObjectID } = require('bson');
 const {
     Schema,
     model
@@ -39,9 +40,10 @@ const UsuariosSchema = Schema({
 UsuariosSchema.methods.toJSON = function () {
     const {
         __v,
-        pass,
+        pass, _id,
         ...user
     } = this.toObject();
+    user.uid = _id;
     return user;
-} 
+}
 module.exports = model('Usuario', UsuariosSchema);
