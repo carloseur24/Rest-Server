@@ -1,6 +1,12 @@
-const Rol = require('../models/rol')
-const User = require('../models/usermg')
-
+const {
+    request
+} = require('express')
+const {
+    Category,
+    Rol,
+    User,
+    Product
+} = require('../models')
 
 const rolvalidator = async (rol = '') => {
     const existRol = await Rol.findOne({
@@ -27,7 +33,25 @@ const uservalidator = async (id) => {
         throw new Error(`This user ${id} doesn't exist `)
     }
 }
+const categoryvalidator = async (id) => {
+    const ifcategory = await Category.findById(
+        id
+    );
+    if (!ifcategory) {
+        throw new Error(`This Category ${id} doesn't exist `)
+    }
+}
+const productvalidator = async (id) => {
+    const ifproduct = await Product.findById(
+        id
+    );
+    if (!ifproduct) {
+        throw new Error(`This Product ${id} doesn't exist `)
+    }
+}
 module.exports = {
+    productvalidator,
+    categoryvalidator,
     rolvalidator,
     emailvalidator,
     uservalidator

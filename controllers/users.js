@@ -4,7 +4,7 @@ const {
     request
 } = require('express');
 const User = require('../models/usermg')
-
+//READ
 const usersGet = async (req = request, res = response) => {
     const {
         limit = 5, from = 0
@@ -30,6 +30,7 @@ const usersGet = async (req = request, res = response) => {
     })
 
 }
+//UPDATE
 const usersPut = async (req = request, res = response) => {
     const {
         id
@@ -52,6 +53,7 @@ const usersPut = async (req = request, res = response) => {
         user
     })
 }
+//CREATE
 const usersPost = async (req, res = response) => {
     const {
         name,
